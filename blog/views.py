@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Post
+from .forms import PubForm
 
 
 # Create your views here.
@@ -12,3 +13,16 @@ def post_list(request):
 def detalle_pub(request, pk):
     p = get_object_or_404(Post, pk=pk)
     return render(request, 'blog/detalle_pub.html', {'p': p})
+
+def nueva_pub(request):
+    if request.method == "POST":
+        f = PubForm(request.POST)
+        if f.is_valid():
+            p = f.save(commit=False)
+            p.author = request.user
+            p.published_date = timezone.now()
+            p.save()
+            return redirect('detalle_pub', pk=p.pk)
+    else:
+        f = PubForm()
+    return render(request, 'blog/editar_pub.html', {'f': f})
