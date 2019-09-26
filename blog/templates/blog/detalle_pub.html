@@ -5,6 +5,8 @@
 		<div class="date">
 			{{ p.published_date }}
 		</div>	
+		<a class="btn btn-default" href="{% url 'editar_pub' pk=p.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+
         <h1><a href = "{% url 'detalle_pub' pk=p.pk %}" >{{ p.title }}
         <p>{{ p.text|linebreaksbr }} </p>
         	</div>

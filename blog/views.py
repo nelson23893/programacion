@@ -26,3 +26,17 @@ def nueva_pub(request):
     else:
         f = PubForm()
     return render(request, 'blog/editar_pub.html', {'f': f})
+
+def editar_pub(request, pk):
+    p = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        f = PostForm(request.POST, instance=p)
+        if f.is_valid():
+            p = form.save(commit=False)
+            p.author = request.user
+            p.published_date = timezone.now()
+            p.save()
+            return redirect('detalle_pub', pk=p.pk)
+    else:
+        f = PubForm(instance=post)
+    return render(request, 'blog/editar_pub.html', {'f': f})
