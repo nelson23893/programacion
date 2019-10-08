@@ -2,12 +2,25 @@
 
 {% block content %}
     <div class="post">
-		<div class="date">
-			{{ p.published_date }}
-		</div>	
-		<a class="btn btn-default" href="{% url 'editar_pub' pk=p.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
 
-        <h1><a href = "{% url 'detalle_pub' pk=p.pk %}" >{{ p.title }}
+    	{% if p.published_date %}
+    		<div class="date">
+        		{{ p.published_date }}
+    		</div>
+		{% else %}
+    		<a class="btn btn-default" href="{% url 'post_publish' pk=p.pk %}">Publish</a>
+        {% endif %}
+
+
+        <!-- {% if user.is_authenticated %}
+            <a class="btn btn-default" href="{% url 'editar_pub' pk=p.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="btn btn-default" href="{% url 'post_remove' pk=p.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+        {% endif %}  -->
+
+		<a class="btn btn-default" href="{% url 'editar_pub' pk=p.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+         <a class="btn btn-default" href="{% url 'post_remove' pk=p.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+
+        <h1><a href = "{% url 'detalle_pub' pk=p.pk %}" >{{ p.title }}</a></h1>
         <p>{{ p.text|linebreaksbr }} </p>
-        	</div>
+    </div>
 {% endblock %}

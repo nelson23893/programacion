@@ -6,7 +6,7 @@ from .forms import PubForm
 
 # Create your views here.
 
-def post_list(request):
+def listar_pub(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
     return render(request, 'blog/listar_pub.html', {'posts': posts})
 
@@ -20,7 +20,7 @@ def nueva_pub(request):
         if f.is_valid():
             p = f.save(commit=False)
             p.author = request.user
-            p.published_date = timezone.now()
+            #p.published_date = timezone.now()
             p.save()
             return redirect('detalle_pub', pk=p.pk)
     else:
@@ -34,9 +34,23 @@ def editar_pub(request, pk):
         if f.is_valid():
             p = f.save(commit=False)
             p.author = request.user
-            p.published_date = timezone.now()
+            #p.published_date = timezone.now()
             p.save()
             return redirect('detalle_pub', pk=p.pk)
     else:
         f = PubForm(instance=p)
     return render(request, 'blog/editar_pub.html', {'f': f})
+
+def post_draft_list(request):
+    posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
+    return render(request, 'blog/post_draft_list.html', {'posts': posts})
+
+def post_publish(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.publish()
+    return redirect('detalle_pub', pk=pk)
+
+def post_remove(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    return redirect('listar_pub')
